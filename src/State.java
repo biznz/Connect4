@@ -35,6 +35,7 @@ public class State {
         this.insertMove(this.board, this.move);
         this.list = buildFreePos(this.board);
         System.out.println(this);
+        System.out.println(this.segments.size());
         System.out.println(this.getValidPosAsString());
     }
     
@@ -67,6 +68,14 @@ public class State {
                         }
                     }
                 }
+                else{
+                    if(s==5){
+                        int[] pos = new int[2];
+                        pos[0] = s;
+                        pos[1] = h;
+                        result.add(pos);
+                    }
+                }
             }
         }
         return result;
@@ -90,6 +99,7 @@ public class State {
             available_pos[1]=a;
             this.list.add(available_pos);
         }
+        
     }
     
     //copies a array board to another one
@@ -143,34 +153,36 @@ public class State {
         HashSet<Segment> temp = new HashSet<Segment>();
         Segment seg = null;
         int f=0;
+        //verticais
         for(int k=0;k<6-3;k++){
             for(int l=0;l<7;l++){
                     f++;
                     int a[] = {k,l};
                     int b[] = {k+3,l};
-                    seg = new Segment(a,b);
+                    seg = new Segment(a,b,this);
                     temp.add(seg);
             }
         }
         for(int s=0;s<6;s++){
             for(int h=0;h<7;h++){
                 if(h+3<7){
+                    //horizontais
                     int a[] = {s,h};
                     int b[] = {s,h+3};
-                    seg = new Segment(a,b);
+                    seg = new Segment(a,b,this);
                     temp.add(seg);
                 }
                 // // diagonals
                 if(s-3>=0 && h+3<7){
                     int a[] = {s,h};
-                    int b[] = {s-3,h+3};seg = new Segment(a,b);
+                    int b[] = {s-3,h+3};seg = new Segment(a,b,this);
                     temp.add(seg);
                 // \\ diagonals
                 }
                 if(h+3<7 && s+3<6){
                     int c[] = {s,h};
                     int d[] = {s+3,h+3};
-                    seg = new Segment(c,d);
+                    seg = new Segment(c,d,this);
                     temp.add(seg);
                 }
             }
@@ -211,10 +223,11 @@ public class State {
     }
     
     public String getValidPosAsString(){
-        String result="";
+        String result="valid Pos: ";
         int counter=0;
         for(int[] s:this.list){
-            result+=""+counter+": pos 0: "+s[0]+": pos 1:"+s[1];
+            counter+=1;
+            result+=""+counter+"- x: "+s[0]+",1:"+s[1]+"| ";
         }
         return result;
     }

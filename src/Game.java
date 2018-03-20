@@ -81,6 +81,7 @@ public class Game {
     //does a cpu move
     private static boolean playCPU(){
         System.out.println(current);
+        System.out.println(current.getValidPosAsString());
         Move move = MinMax.MINMAX_DECISION(current);
         State newState = new State(current.getBoard(),move,current.getDepth()+1);
         setCurrentState(newState);

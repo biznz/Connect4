@@ -16,13 +16,15 @@ public class Segment {
     private int xCount;
     private int oCount;
 
-    public Segment(int[] firstPos, int[] lastPos) {
+    public Segment(int[] firstPos, int[] lastPos,State state) {
         this.firstPos= firstPos;
         this.lastPos= lastPos;
         this.direction = checkDirection(firstPos,lastPos);
         this.value = 0;
         this.xCount = 0;
         this.oCount = 0;
+        //System.out.println(this);
+        this.countPieces(state);
     }
     
     //
@@ -59,19 +61,33 @@ public class Segment {
                 break;
             }
             case "diagonal":{
-                int x = firstPos[0];
-                int y = firstPos[1];
+                int fx = firstPos[0];
+                int fy = firstPos[1];
+                int lx = lastPos[0];
+                int ly = lastPos[1];
+                for(int a=0;a<4;a++){
+                    // this orientation \ bigger x bigger y
+                    if(lastPos[0]>firstPos[0] && lastPos[1]>firstPos[1]){
+                        tmp[a] = state.getBoard()[fx+a][fy+a];
+                    }
+                    // this orientation / smaller x bigger y
+                    if( lastPos[0] > firstPos[0] && lastPos[1] > firstPos[1]){
+                        tmp[a] = state.getBoard()[fx+3-a][fy+a];
+                    }
+                    //if()
+                }
+                
                 // --\-- top to bottom
-                if(firstPos[1]>lastPos[1]){
+                /*if(y<lastPos[1]){
                     for(int a=0;a<4;a++){
-                           tmp[a] = state.getBoard()[x+a][y+a];
+                           tmp[a] = state.getBoard()[fx+a][fy+a];
                         }
                 }
-                else{ // --/-- bottom to top
+                else if(firstPos[1]>lastPos[1]){ // --/-- bottom to top
                     for(int a=0;a<4;a++){
-                        tmp[a] = state.getBoard()[x-a][y+a];
+                        tmp[a] = state.getBoard()[fx-a][fy+a];
                     }
-                }
+                }*/
                 break;
             }
         }
@@ -93,6 +109,7 @@ public class Segment {
     //obtains segment utility value
     public void setSegMentValue(){
         if(xCount==4){
+            //System.out.println("found an ending segment: "+this);
             value = 512;
         }
         if(oCount==4){

@@ -75,11 +75,21 @@ public class MinMax {
         HashSet<State> children = new HashSet<State>();
         Move move = null;
         for(int[] s:state.getValidPos()){
-            if(Game.currentPlayer.getWho().equals("human")){
-                move = new Move(Game.cpu,s);
+            if(state.getMove()==null){
+                if(Game.currentPlayer.getWho().equals("human")){
+                    move = new Move(Game.cpu,s);
+                }
+                if(Game.currentPlayer.getWho().equals("cpu")){
+                    move = new Move(Game.human,s);
+                }
             }
-            if(Game.currentPlayer.getWho().equals("cpu")){
-                move = new Move(Game.human,s);
+            else{
+                if(state.getMove().getPlayer().getWho().equals("human")){
+                    move = new Move(Game.cpu,s);
+                }
+                if(state.getMove().getPlayer().getWho().equals("cpu")){
+                    move = new Move(Game.human,s);
+                }
             }
             State newState = new State(state.getBoard(),move,state.getDepth()+1);
             children.add(newState);
@@ -91,7 +101,10 @@ public class MinMax {
     public static int UTILITY(State state){
         int total = 0;
         for(Segment s:state.getSegments()){
+            System.out.println("Segment :"+s);
             int current = s.getSegmentValue();
+            System.out.println("HERHERE ");
+            System.out.println(" segment value"+ current+" \n");
             if(Math.abs(current)==512){
                 return current;
             }
