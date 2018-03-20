@@ -86,6 +86,10 @@ public class Segment {
         return tmp;
     }
     
+    public int getSegmentValue(){
+        return this.value;
+    }
+    
     //obtains segment utility value
     public void setSegMentValue(){
         if(xCount==4){

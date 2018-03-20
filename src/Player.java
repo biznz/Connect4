@@ -15,10 +15,10 @@ public class Player {
     public Player(String who) {
         this.who = who;
         if(this.who.equals("cpu")){
-            this.marker = "X";
+            this.marker = "O";
         }
         if(this.who.equals("human")){
-            this.marker = "O";
+            this.marker = "X";
         }
     }
 
@@ -36,6 +36,11 @@ public class Player {
 
     public void setMarker(String marker) {
         this.marker = marker;
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" + "who=" + who + ", marker=" + marker + '}';
     }
     
     

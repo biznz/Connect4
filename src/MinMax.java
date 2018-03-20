@@ -37,7 +37,7 @@ public class MinMax {
             //System.out.println("Found a terminal state on min\n:"+state);
             return UTILITY(state);
         }
-        if(SUCCESSOR(state).size()==0){
+        if(SUCCESSOR(state).isEmpty()){
             return UTILITY(state);
         }
         int v = negativeInf;
@@ -53,7 +53,7 @@ public class MinMax {
             //System.out.println("Found a terminal state on min\n:"+state);
             return UTILITY(state);
         }
-        if(SUCCESSOR(state).size()==0){
+        if(SUCCESSOR(state).isEmpty()){
             return UTILITY(state);
         }
         int v = positiveInf;
@@ -65,31 +65,47 @@ public class MinMax {
     
     public static boolean TERMINAL_TEST(State state){
         if(state.isFull())return true;
-        
+        if(UTILITY(state)==512 || UTILITY(state)==-512){
+            return true;
+        }
         return false;
     }
     
     public static Set<State> SUCCESSOR(State state){
         HashSet<State> children = new HashSet<State>();
         Move move = null;
-        
         for(int[] s:state.getValidPos()){
             if(Game.currentPlayer.getWho().equals("human")){
                 move = new Move(Game.cpu,s);
             }
-            if(Game.currentPlayer.getWho().equals("human")){
-                move = new Move(Game.cpu,s);
+            if(Game.currentPlayer.getWho().equals("cpu")){
+                move = new Move(Game.human,s);
             }
-            State newState = new State(state.getBoard(),)
+            State newState = new State(state.getBoard(),move,state.getDepth()+1);
+            children.add(newState);
         }
+        state.setChildren(children);
         return children;
     }
     
     public static int UTILITY(State state){
-        return -1;
+        int total = 0;
+        for(Segment s:state.getSegments()){
+            int current = s.getSegmentValue();
+            if(Math.abs(current)==512){
+                return current;
+            }
+            total+=current;
+        }
+        return total;
     }
     
     public static Move getMove(int v,State state){
+        for(State s: state.getChildren()){
+            if(s.getUtility()==v){
+                return s.getMove();
+            }
+        }
         return null;
     }
 }

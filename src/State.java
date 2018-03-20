@@ -22,6 +22,7 @@ public class State {
     private boolean full;
     private Set<Segment> segments;
     private LinkedList<int[]> list;
+    private Set<State> childStates;
 
     
     public State(int[][] board, Move move, int depth) {
@@ -30,10 +31,14 @@ public class State {
         this.depth = depth;
         this.full = isFull();
         this.segments=buildSet();
+        System.out.println(move);
         this.insertMove(this.board, this.move);
         this.list = buildFreePos(this.board);
+        System.out.println(this);
+        System.out.println(this.getValidPosAsString());
     }
     
+    //inserts an already defined move in a board matrix
     public void insertMove(int[][] board,Move move){
         switch(move.getPlayer().getWho()){
             case "human":{
@@ -47,6 +52,7 @@ public class State {
         }
     }
     
+    //builds the list of free positions in a board
     public LinkedList<int[]> buildFreePos(int[][] board){
         LinkedList<int[]> result = new LinkedList<int[]>();
         for(int s=0;s<6;s++){
@@ -68,6 +74,7 @@ public class State {
 
     public State(){
         this.board = new int[6][7];
+        this.list = new LinkedList<int[]>();
         for(int a=0;a<6;a++){
             for(int h=0;h<7;h++){
                 this.board[a][h] = -1;
@@ -79,8 +86,8 @@ public class State {
         this.segments = buildSet();
         for(int a=0;a<7;a++){
             int[] available_pos = new int[2];
-            available_pos[0]=a;
-            available_pos[1]=5;
+            available_pos[0]=5;
+            available_pos[1]=a;
             this.list.add(available_pos);
         }
     }
@@ -96,6 +103,8 @@ public class State {
         return newBoard;
     }
     
+    //checks if board is full
+    // sets full param to true if so
     public void setFull(){
         this.full = true;
         for(int i=0;i<6;i++){
@@ -107,6 +116,20 @@ public class State {
         }
     }
     
+    
+    public void setChildren(Set<State> children){
+        this.childStates = children;
+    }
+    
+    public Set<State> getChildren(){
+        return this.childStates;
+    }
+    
+    public Set<Segment> getSegments(){
+        return this.segments;
+    }
+    
+    //prints the board segments
     public void printSegmentSet(){
         if(this.segments.isEmpty())return;
         for(Segment s:this.segments){
@@ -115,6 +138,7 @@ public class State {
         System.out.println("number of segments:"+this.segments.size());
     }
     
+    //builds the board segments
     public Set<Segment> buildSet(){
         HashSet<Segment> temp = new HashSet<Segment>();
         Segment seg = null;
@@ -154,6 +178,7 @@ public class State {
         return temp;
     }
     
+    //prints the board
     public String printBoard(){
         String result="";
         for(int a=0;a<6;a++){
@@ -163,6 +188,10 @@ public class State {
                 if(this.board[a][h]==0)result+=" O";
                 if(h==6)result+="\n";
             }
+        }
+        result+="\n";
+        for(int a=1;a<=7;a++){
+            result+=" ^";
         }
         result+="\n";
         for(int a=1;a<=7;a++){
@@ -179,6 +208,15 @@ public class State {
 
     public LinkedList<int[]> getValidPos(){
         return this.list;
+    }
+    
+    public String getValidPosAsString(){
+        String result="";
+        int counter=0;
+        for(int[] s:this.list){
+            result+=""+counter+": pos 0: "+s[0]+": pos 1:"+s[1];
+        }
+        return result;
     }
     
     public int getUtility() {

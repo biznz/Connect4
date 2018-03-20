@@ -33,9 +33,13 @@ public class Move {
         this.position = position;
     }
 
+    public String getPositionAsString(){
+        return "pos 0: "+this.position[0]+"pos 1: "+this.position[1];
+    }
+    
     @Override
     public String toString() {
-        return "Move{" + "player=" + player + ", position=" + position + '}';
+        return "Move{" + "player=" + player + ", position=" + getPositionAsString() + '}';
     }
     
     

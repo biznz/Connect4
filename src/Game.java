@@ -38,9 +38,11 @@ public class Game {
                     option1 = input;
                     if(input==1){
                         startingPlayer = cpu;
+                        currentPlayer = human;
                     }
                     if(input==2){
                         startingPlayer = human;
+                        currentPlayer = cpu;
                     }
                 }
                 if(input==1){
@@ -62,13 +64,71 @@ public class Game {
         }
         while(!finished){
             if(option1==1){
-                System.out.println(current);
-                current.printSegmentSet();
-                break;
+                
+                if(getCurrentPlayer().getWho().equals("human")){
+                    playCPU();
+                }
+                else{
+                    playHuman();
+                }
             }
             if(option1==2){
             }
         }
         
     }
+    
+    //does a cpu move
+    private static boolean playCPU(){
+        System.out.println(current);
+        Move move = MinMax.MINMAX_DECISION(current);
+        State newState = new State(current.getBoard(),move,current.getDepth()+1);
+        setCurrentState(newState);
+        setCurrentPlayer(cpu);
+        System.out.println(current.getValidPosAsString());
+        return false;
+    }
+    
+    //does a human move
+    private static boolean playHuman(){
+        System.out.println(current);
+        int result[]=promptUserForMove();
+        State newState = new State(current.getBoard(),new Move(human,result),current.getDepth()+1);
+        setCurrentState(newState);
+        setCurrentPlayer(human);
+        return false;
+    }
+    
+    
+    private static void setCurrentState(State state){
+        current = state;
+    }
+    
+    private static void setCurrentPlayer(Player player){
+        currentPlayer = player;
+    }
+    
+    private static Player getCurrentPlayer(){
+        return currentPlayer;
+    }
+    
+    public static int[] promptUserForMove(){
+        int option1=-1;
+        int[] pos = null;
+        while(option1==-1){
+            System.out.println("Your turn, choose a valid column where to place a piece");
+            //System.out.println(current);
+            if(in.hasNext()){
+                int input = in.nextInt();
+                for(int[] s: current.getValidPos()){
+                    if(s[1]==input-1){
+                        return s;
+                    }
+                }
+            }
+        }
+        //System.out.println("playing to option"+option1);
+        return pos;
+    }
+    
 }
