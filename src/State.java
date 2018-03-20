@@ -1,6 +1,7 @@
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 /*
@@ -20,6 +21,7 @@ public class State {
     private int utility;
     private boolean full;
     private Set<Segment> segments;
+    private LinkedList<int[]> list;
 
     
     public State(int[][] board, Move move, int depth) {
@@ -28,6 +30,40 @@ public class State {
         this.depth = depth;
         this.full = isFull();
         this.segments=buildSet();
+        this.insertMove(this.board, this.move);
+        this.list = buildFreePos(this.board);
+    }
+    
+    public void insertMove(int[][] board,Move move){
+        switch(move.getPlayer().getWho()){
+            case "human":{
+                this.board[move.getPosition()[0]][move.getPosition()[1]]=1;
+                break;
+            }
+            case "cpu":{
+                this.board[move.getPosition()[0]][move.getPosition()[1]]=0;
+                break;
+            }
+        }
+    }
+    
+    public LinkedList<int[]> buildFreePos(int[][] board){
+        LinkedList<int[]> result = new LinkedList<int[]>();
+        for(int s=0;s<6;s++){
+            for(int h=0;h<7;h++){
+                if(board[s][h]!=-1){
+                    if(s-1>=0){
+                        if(board[s-1][h]==-1){
+                            int[] pos = new int[2];
+                            pos[0] = s-1;
+                            pos[1] = h;
+                            result.add(pos);
+                        }
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     public State(){
@@ -41,6 +77,12 @@ public class State {
         this.depth = 0;
         this.full = false;
         this.segments = buildSet();
+        for(int a=0;a<7;a++){
+            int[] available_pos = new int[2];
+            available_pos[0]=a;
+            available_pos[1]=5;
+            this.list.add(available_pos);
+        }
     }
     
     //copies a array board to another one
@@ -135,6 +177,10 @@ public class State {
         return this.full;
     }
 
+    public LinkedList<int[]> getValidPos(){
+        return this.list;
+    }
+    
     public int getUtility() {
         return utility;
     }

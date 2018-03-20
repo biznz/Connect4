@@ -15,14 +15,17 @@ public class Game {
     
     static Scanner in;
     static Player startingPlayer;
+    static Player currentPlayer;
     static boolean finished;
     static State current;
+    static Player human;
+    static Player cpu;
     public static void main(String[] args) {
         // TODO code application logic here
         int option1=-1;
         int option2=-1;
-        Player human = new Player("human");
-        Player cpu = new Player("cpu");
+        human = new Player("human");
+        cpu = new Player("cpu");
         finished = false;
         in = new Scanner(System.in);
         while(option1==-1){

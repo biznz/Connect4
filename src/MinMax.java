@@ -1,4 +1,5 @@
 
+import java.util.HashSet;
 import java.util.Set;
 
 /*
@@ -69,7 +70,19 @@ public class MinMax {
     }
     
     public static Set<State> SUCCESSOR(State state){
-        return null;
+        HashSet<State> children = new HashSet<State>();
+        Move move = null;
+        
+        for(int[] s:state.getValidPos()){
+            if(Game.currentPlayer.getWho().equals("human")){
+                move = new Move(Game.cpu,s);
+            }
+            if(Game.currentPlayer.getWho().equals("human")){
+                move = new Move(Game.cpu,s);
+            }
+            State newState = new State(state.getBoard(),)
+        }
+        return children;
     }
     
     public static int UTILITY(State state){
