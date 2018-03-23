@@ -24,10 +24,11 @@ public class MinMax {
     public static int positiveInf = (int)Double.POSITIVE_INFINITY;
     private static int[] win = {1,positiveInf};
     private static int[] defeat = {-1,negativeInf};
-    private static int depthLimit;
+    public static int depthLimit;
     
     public static Move MINMAX_DECISION(State state){
         int v = MAX_VALUE(state);
+        System.out.println("UTILITY VALUE:"+v);
         return getMove(v, state);
     }
     
@@ -44,6 +45,8 @@ public class MinMax {
         for(State s:SUCCESSOR(state)){
             v = Math.max(v, MIN_VALUE(s));
         }
+        state.setUtility(v);
+        System.out.println(state);
         return v;
     }
     
@@ -60,20 +63,24 @@ public class MinMax {
         for(State s:SUCCESSOR(state)){
             v = Math.min(v, MAX_VALUE(s));
         }
+        state.setUtility(v);
+        System.out.println(state);
         return v;
     }
     
     public static boolean TERMINAL_TEST(State state){
         if(state.isFull())return true;
-        if(UTILITY(state)==512 || UTILITY(state)==-512){
-            return true;
-        }
+        if(UTILITY(state)==512 || UTILITY(state)==-512){return true;}
+        if(state.getChildren()==null && state.getDepth()>depthLimit){return true;}
         return false;
     }
     
     public static Set<State> SUCCESSOR(State state){
         HashSet<State> children = new HashSet<State>();
         Move move = null;
+        if(state.getDepth()>depthLimit){
+            return children;
+        }
         for(int[] s:state.getValidPos()){
             if(state.getMove()==null){
                 if(Game.currentPlayer.getWho().equals("human")){
@@ -101,10 +108,7 @@ public class MinMax {
     public static int UTILITY(State state){
         int total = 0;
         for(Segment s:state.getSegments()){
-            System.out.println("Segment :"+s);
             int current = s.getSegmentValue();
-            System.out.println("HERHERE ");
-            System.out.println(" segment value"+ current+" \n");
             if(Math.abs(current)==512){
                 return current;
             }

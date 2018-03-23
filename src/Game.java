@@ -20,6 +20,7 @@ public class Game {
     static State current;
     static Player human;
     static Player cpu;
+    static int depth=5;
     public static void main(String[] args) {
         // TODO code application logic here
         int option1=-1;
@@ -55,16 +56,15 @@ public class Game {
                             if(input2==1 || input2==2){
                                 option2 = input;
                                 current = new State();
+                                setMaximumDepth(5);
                             }
                         }
-                       
                     }
                 }
             }
         }
         while(!finished){
             if(option1==1){
-                
                 if(getCurrentPlayer().getWho().equals("human")){
                     playCPU();
                 }
@@ -86,6 +86,7 @@ public class Game {
         State newState = new State(current.getBoard(),move,current.getDepth()+1);
         setCurrentState(newState);
         setCurrentPlayer(cpu);
+        setMaximumDepth(5);
         System.out.println(current.getValidPosAsString());
         return false;
     }
@@ -97,6 +98,7 @@ public class Game {
         State newState = new State(current.getBoard(),new Move(human,result),current.getDepth()+1);
         setCurrentState(newState);
         setCurrentPlayer(human);
+        setMaximumDepth(5);
         return false;
     }
     
@@ -130,6 +132,11 @@ public class Game {
         }
         //System.out.println("playing to option"+option1);
         return pos;
+    }
+    
+    private static void setMaximumDepth(int s){
+        depth = s;
+        MinMax.depthLimit = current.getDepth()+depth;
     }
     
 }
