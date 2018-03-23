@@ -34,44 +34,51 @@ public class MinMax {
     
     public static int MAX_VALUE(State state){
         //System.out.println("testing max value for"+ state);
+        System.out.println(state);
+        state.printSegmentSet();
         if(TERMINAL_TEST(state)){
             //System.out.println("Found a terminal state on min\n:"+state);
             return UTILITY(state);
         }
-        if(SUCCESSOR(state).isEmpty()){
-            return UTILITY(state);
-        }
+//        if(SUCCESSOR(state).isEmpty()){
+//            return UTILITY(state);
+//        }
         int v = negativeInf;
         for(State s:SUCCESSOR(state)){
             v = Math.max(v, MIN_VALUE(s));
         }
         state.setUtility(v);
-        System.out.println(state);
+//        System.out.println(state);
         return v;
     }
     
     public static int MIN_VALUE(State state){
         //System.out.println("testing min value for"+ state);
+        System.out.println(state);
+        state.printSegmentSet();
         if(TERMINAL_TEST(state)){
             //System.out.println("Found a terminal state on min\n:"+state);
             return UTILITY(state);
         }
-        if(SUCCESSOR(state).isEmpty()){
-            return UTILITY(state);
-        }
+//        if(SUCCESSOR(state).isEmpty()){
+//            return UTILITY(state);
+//        }
         int v = positiveInf;
         for(State s:SUCCESSOR(state)){
             v = Math.min(v, MAX_VALUE(s));
         }
         state.setUtility(v);
-        System.out.println(state);
+//        System.out.println(state);
         return v;
     }
     
     public static boolean TERMINAL_TEST(State state){
         if(state.isFull())return true;
         if(UTILITY(state)==512 || UTILITY(state)==-512){return true;}
-        if(state.getChildren()==null && state.getDepth()>depthLimit){return true;}
+        if(state.getDepth()!=0){
+            if(state.getDepth()>depthLimit){return true;}
+            
+        }
         return false;
     }
     
@@ -79,6 +86,7 @@ public class MinMax {
         HashSet<State> children = new HashSet<State>();
         Move move = null;
         if(state.getDepth()>depthLimit){
+            state.setChildren(children);
             return children;
         }
         for(int[] s:state.getValidPos()){
@@ -108,6 +116,7 @@ public class MinMax {
     public static int UTILITY(State state){
         int total = 0;
         for(Segment s:state.getSegments()){
+            s.setSegMentValue();
             int current = s.getSegmentValue();
             if(Math.abs(current)==512){
                 return current;

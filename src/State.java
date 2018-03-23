@@ -31,12 +31,14 @@ public class State {
         this.depth = depth;
         this.full = isFull();
         this.segments=buildSet();
-        System.out.println(move);
+//        System.out.println(move);
         this.insertMove(this.board, this.move);
         this.list = buildFreePos(this.board);
-        System.out.println(this);
-        System.out.println(this.segments.size());
-        System.out.println(this.getValidPosAsString());
+//        System.out.println(this);
+//        this.printSegmentSet();
+        //System.out.println("THE UTILITY"+MinMax.UTILITY(this));
+//        System.out.println(this.segments.size());
+//        System.out.println(this.getValidPosAsString());
     }
     
     //inserts an already defined move in a board matrix

@@ -15,6 +15,7 @@ public class Segment {
     private int value;
     private int xCount;
     private int oCount;
+    private int[] tmpvals = new int[4];
 
     public Segment(int[] firstPos, int[] lastPos,State state) {
         this.firstPos= firstPos;
@@ -30,7 +31,7 @@ public class Segment {
     //
     private String checkDirection(int[] firstPos,int[] lastPos){
         if(firstPos[0] == lastPos[0]){
-             return "horziontal";
+             return "horizontal";
         }
         if(firstPos[1] == lastPos[1]){
              return "vertical";
@@ -99,11 +100,21 @@ public class Segment {
                 this.setoCount(this.getoCount()+1);
             }
         }
+        tmpvals = tmp;
         return tmp;
     }
     
     public int getSegmentValue(){
         return this.value;
+    }
+    
+    public String TmpVals(){
+        String result="[";
+        for(int s=0;s<4;s++){
+            result+=tmpvals[s]+",";
+        }
+        result+="]";
+        return result;
     }
     
     //obtains segment utility value
@@ -123,9 +134,6 @@ public class Segment {
         }
         if(xCount==0 && oCount==1){
             value = -1;
-        }
-        if(xCount==0 && oCount==0 || xCount==1 && oCount==1 || xCount==2 && oCount==2){
-            value = 0;
         }
         if(xCount==1 && oCount==0){
             value = 1;
@@ -189,7 +197,7 @@ public class Segment {
 
     @Override
     public String toString() {
-        return "Segment{" + "firstPos=" + firstPos[0]+" ,"+firstPos[1] + ", xCount=" + xCount + ", oCount=" + oCount + ", lastPos=" + lastPos[0]+" ,"+lastPos[1] + ", direction=" + direction + ", value=" + value + '}';
+        return "Segment{" + "firstPos=" + firstPos[0]+" ,"+firstPos[1] + ", xCount=" + xCount + ", oCount=" + oCount + ""+TmpVals()+", lastPos=" + lastPos[0]+" ,"+lastPos[1] + ", direction=" + direction + ", value=" + value + '}';
     }
     
     
