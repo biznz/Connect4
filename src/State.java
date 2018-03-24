@@ -36,7 +36,7 @@ public class State {
         this.list = buildFreePos(this.board);
 //        System.out.println(this);
 //        this.printSegmentSet();
-        //System.out.println("THE UTILITY"+MinMax.UTILITY(this));
+//        System.out.println("THE UTILITY"+MinMax.UTILITY(this));
 //        System.out.println(this.segments.size());
 //        System.out.println(this.getValidPosAsString());
     }
@@ -45,7 +45,7 @@ public class State {
     public void insertMove(int[][] board,Move move){
         switch(move.getPlayer().getWho()){
             case "human":{
-                this.board[move.getPosition()[0]][move.getPosition()[1]]=1;
+                this.board[move.getPosition()[0]][move.getPosition()[1]]=6;
                 break;
             }
             case "cpu":{
@@ -198,7 +198,7 @@ public class State {
         for(int a=0;a<6;a++){
             for(int h=0;h<7;h++){
                 if(this.board[a][h]==-1)result+=" _";
-                if(this.board[a][h]==1)result+=" X";
+                if(this.board[a][h]==6)result+=" X";
                 if(this.board[a][h]==0)result+=" O";
                 if(h==6)result+="\n";
             }

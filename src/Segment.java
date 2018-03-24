@@ -72,8 +72,8 @@ public class Segment {
                         tmp[a] = state.getBoard()[fx+a][fy+a];
                     }
                     // this orientation / smaller x bigger y
-                    if( lastPos[0] > firstPos[0] && lastPos[1] > firstPos[1]){
-                        tmp[a] = state.getBoard()[fx+3-a][fy+a];
+                    if( lastPos[0] < firstPos[0] && firstPos[1]<lastPos[1]){
+                        tmp[a] = state.getBoard()[fx-a][fy+a];
                     }
                     //if()
                 }
@@ -93,7 +93,7 @@ public class Segment {
             }
         }
         for(int a=0;a<4;a++){
-            if(tmp[a]==1){
+            if(tmp[a]==6){
                 this.setxCount(this.getxCount()+1);
             }
             if(tmp[a]==0){
@@ -119,30 +119,30 @@ public class Segment {
     
     //obtains segment utility value
     public void setSegMentValue(){
-        if(xCount==4){
+        if(this.xCount==4){
             //System.out.println("found an ending segment: "+this);
-            value = 512;
+            this.value = -512;
         }
-        if(oCount==4){
-            value = -512;
+        if(this.oCount==4){
+            this.value = 512;
         }
-        if(xCount==0 && oCount==3){
-            value = -50;
+        if(this.xCount==0 && this.oCount==3){
+            this.value = 50;
         }
-        if(xCount==0 && oCount==2){
-            value = -10;
+        if(this.xCount==0 && this.oCount==2){
+            this.value = 10;
         }
-        if(xCount==0 && oCount==1){
-            value = -1;
+        if(this.xCount==0 && this.oCount==1){
+            this.value = 1;
         }
-        if(xCount==1 && oCount==0){
-            value = 1;
+        if(this.xCount==1 && this.oCount==0){
+            this.value = -1;
         }
-        if(xCount==2 && oCount==0){
-            value = 10;
+        if(this.xCount==2 && this.oCount==0){
+            this.value = -10;
         }
-        if(xCount==3 && oCount==0){
-            value = 50;
+        if(this.xCount==3 && this.oCount==0){
+            this.value = -50;
         }
     }
     

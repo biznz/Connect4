@@ -33,9 +33,10 @@ public class MinMax {
     }
     
     public static int MAX_VALUE(State state){
-        //System.out.println("testing max value for"+ state);
-        System.out.println(state);
-        state.printSegmentSet();
+        System.out.println("testing max value for"+ state);
+        System.out.println(" Utility value "+UTILITY(state));
+//        System.out.println(state);
+//        state.printSegmentSet();
         if(TERMINAL_TEST(state)){
             //System.out.println("Found a terminal state on min\n:"+state);
             return UTILITY(state);
@@ -53,9 +54,11 @@ public class MinMax {
     }
     
     public static int MIN_VALUE(State state){
+        System.out.println("testing min value for"+ state);
+        System.out.println(" Utility value "+UTILITY(state));
         //System.out.println("testing min value for"+ state);
-        System.out.println(state);
-        state.printSegmentSet();
+//        System.out.println(state);
+//        state.printSegmentSet();
         if(TERMINAL_TEST(state)){
             //System.out.println("Found a terminal state on min\n:"+state);
             return UTILITY(state);
@@ -77,7 +80,6 @@ public class MinMax {
         if(UTILITY(state)==512 || UTILITY(state)==-512){return true;}
         if(state.getDepth()!=0){
             if(state.getDepth()>depthLimit){return true;}
-            
         }
         return false;
     }
@@ -123,6 +125,8 @@ public class MinMax {
             }
             total+=current;
         }
+//        if(state.getMove().getPlayer().getWho().equals("cpu")){total+=16;}
+//        if(state.getMove().getPlayer().getWho().equals("human")){total=-16;}
         return total;
     }
     

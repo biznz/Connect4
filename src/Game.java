@@ -20,7 +20,7 @@ public class Game {
     static State current;
     static Player human;
     static Player cpu;
-    static int depth=3;
+    static int depth=1;
     public static void main(String[] args) {
         // TODO code application logic here
         int option1=-1;
@@ -46,7 +46,7 @@ public class Game {
                         currentPlayer = cpu;
                     }
                 }
-                if(input==1){
+                if(input==1 || input ==2){
                     while(option2==-1){
                         System.out.println("Please choose cpu approach");
                         System.out.println("1. minmax");
@@ -66,13 +66,31 @@ public class Game {
         while(!finished){
             if(option1==1){
                 if(getCurrentPlayer().getWho().equals("human")){
-                    playCPU();
+                    if(playCPU()){
+                        System.out.println("CPU wins!!");
+                        break;
+                    }
                 }
                 else{
-                    playHuman();
+                    if(playHuman()){
+                        System.out.println("You win!!");
+                        break;
+                    }
                 }
             }
             if(option1==2){
+                if(getCurrentPlayer().getWho().equals("cpu")){
+                    if(playHuman()){
+                        System.out.println("You win!!");
+                        break;
+                    }
+                }
+                else{
+                    if(playCPU()){
+                        System.out.println("CPU wins!!");
+                        break;
+                    }
+                }
             }
         }
         
@@ -81,12 +99,13 @@ public class Game {
     //does a cpu move
     private static boolean playCPU(){
         System.out.println(current);
-        System.out.println(current.getValidPosAsString());
+        current.printSegmentSet();
         Move move = MinMax.MINMAX_DECISION(current);
         State newState = new State(current.getBoard(),move,current.getDepth()+1);
         setCurrentState(newState);
         setCurrentPlayer(cpu);
         setMaximumDepth(current.getDepth()+depth);
+        if(MinMax.UTILITY(current) == 512){return true;}
 //        System.out.println(current.getValidPosAsString());
         return false;
     }
@@ -94,10 +113,13 @@ public class Game {
     //does a human move
     private static boolean playHuman(){
         System.out.println(current);
+        current.printSegmentSet();
         int result[]=promptUserForMove();
         State newState = new State(current.getBoard(),new Move(human,result),current.getDepth()+1);
         setCurrentState(newState);
         setCurrentPlayer(human);
+        setMaximumDepth(current.getDepth()+depth);
+        if(MinMax.UTILITY(current) == -512){return true;}
 //        setMaximumDepth(current.getDepth()+depth);
         return false;
     }
@@ -135,8 +157,7 @@ public class Game {
     }
     
     private static void setMaximumDepth(int s){
-        depth = s;
-        MinMax.depthLimit = current.getDepth()+depth;
+        MinMax.depthLimit = s;
     }
     
 }
