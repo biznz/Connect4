@@ -8,7 +8,7 @@
  *
  * @author user
  */
-public class Segment {
+public class Segment implements Comparable{
     private int firstPos[] = new int[2];
     private int lastPos[] = new int[2];
     private String direction;
@@ -198,6 +198,11 @@ public class Segment {
     @Override
     public String toString() {
         return "Segment{" + "firstPos=" + firstPos[0]+" ,"+firstPos[1] + ", xCount=" + xCount + ", oCount=" + oCount + ""+TmpVals()+", lastPos=" + lastPos[0]+" ,"+lastPos[1] + ", direction=" + direction + ", value=" + value + '}';
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     

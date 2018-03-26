@@ -34,7 +34,8 @@ public class Move {
     }
 
     public String getPositionAsString(){
-        return "pos 0: "+this.position[0]+"pos 1: "+this.position[1];
+        if(this.position!=null){return "pos 0: "+this.position[0]+"pos 1: "+this.position[1];}
+        return "pos 0: null "+" pos 1: null";
     }
     
     @Override

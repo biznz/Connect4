@@ -20,21 +20,23 @@ public class Game {
     static State current;
     static Player human;
     static Player cpu;
-    static int depth=1;
+    static int depth=4;
     public static void main(String[] args) {
         // TODO code application logic here
         int option1=-1;
         int option2=-1;
+        int input=-1;
+        int input2=-1;
         human = new Player("human");
         cpu = new Player("cpu");
         finished = false;
         in = new Scanner(System.in);
         while(option1==-1){
             System.out.println("Please Select who plays first");
-            System.out.println("1.cpu");
-            System.out.println("2.you");
+            System.out.println("1.cpu : O");
+            System.out.println("2.you : X");
             if(in.hasNext()){
-                int input = in.nextInt();
+                input = in.nextInt();
                 if(input==1 || input==2){
                     option1 = input;
                     if(input==1){
@@ -49,30 +51,55 @@ public class Game {
                 if(input==1 || input ==2){
                     while(option2==-1){
                         System.out.println("Please choose cpu approach");
-                        System.out.println("1. minmax");
-                        System.out.println("2. alpha beta pruning");
+                        System.out.println("1. minimax");
+                        System.out.println("2. alpha-beta-pruning");
                         if(in.hasNext()){
-                            int input2 = in.nextInt();
+                            input2 = in.nextInt();
                             if(input2==1 || input2==2){
                                 option2 = input;
                                 current = new State();
+                                //current.setMove(new Move(currentPlayer,null));
                                 setMaximumDepth(depth);
+                                if(input2 == 1){
+                                    System.out.println("Chosen minimax");
+                                }
+                                if(input2 == 2){
+                                    System.out.println("Chosen alpha-beta-pruning");
+                                }
                             }
                         }
                     }
                 }
             }
         }
-        while(!finished){
+        while(!finished && input2==1){
+            System.out.println(current);
+            if(option1==1){
+                if(getCurrentPlayer().getWho().equals("human")){if(playCPU(0)){System.out.println("CPU wins!!");break;}}
+                else{if(playHuman()){
+//                    System.out.println(current);
+                    System.out.println("You win!!");break;}
+                }
+            }
+            if(option1==2){if(getCurrentPlayer().getWho().equals("cpu")){if(playHuman()){System.out.println("You win!!");break;}}
+                else{if(playCPU(0)){
+//                    System.out.println(current);
+                    System.out.println("CPU wins!!");break;}}
+            }
+        }
+        while(!finished && input2==2){
+            System.out.println(current);
             if(option1==1){
                 if(getCurrentPlayer().getWho().equals("human")){
-                    if(playCPU()){
+                    if(playCPU(1)){
+                        
                         System.out.println("CPU wins!!");
                         break;
                     }
                 }
                 else{
                     if(playHuman()){
+//                        System.out.println(current);
                         System.out.println("You win!!");
                         break;
                     }
@@ -86,7 +113,7 @@ public class Game {
                     }
                 }
                 else{
-                    if(playCPU()){
+                    if(playCPU(1)){
                         System.out.println("CPU wins!!");
                         break;
                     }
@@ -97,29 +124,37 @@ public class Game {
     }
     
     //does a cpu move
-    private static boolean playCPU(){
-        System.out.println(current);
-        current.printSegmentSet();
-        Move move = MinMax.MINMAX_DECISION(current);
+    private static boolean playCPU(int i){
+//        System.out.println(current);
+//        System.out.println("UTILITY: "+MinMax.UTILITY(current));
+        Move move=null;
+        if(i==0){
+            move = MinMax.MINMAX_DECISION(current);
+        }
+        if(i==1){
+            move = MinMax.ALPHA_BETA_SEARCH(current);
+        }
         State newState = new State(current.getBoard(),move,current.getDepth()+1);
         setCurrentState(newState);
         setCurrentPlayer(cpu);
+//        System.out.println(current);
+        if(MinMax.UTILITY(current) == 512){System.out.println(current);return true;}
         setMaximumDepth(current.getDepth()+depth);
-        if(MinMax.UTILITY(current) == 512){return true;}
 //        System.out.println(current.getValidPosAsString());
         return false;
     }
     
     //does a human move
     private static boolean playHuman(){
-        System.out.println(current);
-        current.printSegmentSet();
         int result[]=promptUserForMove();
         State newState = new State(current.getBoard(),new Move(human,result),current.getDepth()+1);
         setCurrentState(newState);
         setCurrentPlayer(human);
+//        System.out.println(current);
+        if(MinMax.UTILITY(current) == -512){System.out.println(current);return true;}
+//        System.out.println("UTILITY: "+MinMax.UTILITY(current));
         setMaximumDepth(current.getDepth()+depth);
-        if(MinMax.UTILITY(current) == -512){return true;}
+        //if(MinMax.UTILITY(current) == -512){return true;}
 //        setMaximumDepth(current.getDepth()+depth);
         return false;
     }

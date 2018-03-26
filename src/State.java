@@ -1,6 +1,7 @@
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -22,34 +23,33 @@ public class State {
     private boolean full;
     private Set<Segment> segments;
     private LinkedList<int[]> list;
-    private Set<State> childStates;
+    private HashSet<State> childStates;
 
     
     public State(int[][] board, Move move, int depth) {
         this.board = copyBoard(board);
         this.move = move;
+        this.utility = 0;
         this.depth = depth;
         this.full = isFull();
-        this.segments=buildSet();
 //        System.out.println(move);
         this.insertMove(this.board, this.move);
+        this.list = new LinkedList<int[]>();
         this.list = buildFreePos(this.board);
-//        System.out.println(this);
-//        this.printSegmentSet();
-//        System.out.println("THE UTILITY"+MinMax.UTILITY(this));
-//        System.out.println(this.segments.size());
-//        System.out.println(this.getValidPosAsString());
+        this.segments = buildSet();
+        this.childStates = new HashSet<State> ();
     }
     
     //inserts an already defined move in a board matrix
     public void insertMove(int[][] board,Move move){
+//        System.out.println("insert move into:"+ move.getPosition()[0]+" "+move.getPosition()[1]);
         switch(move.getPlayer().getWho()){
             case "human":{
-                this.board[move.getPosition()[0]][move.getPosition()[1]]=6;
+                board[move.getPosition()[0]][move.getPosition()[1]]=6;
                 break;
             }
             case "cpu":{
-                this.board[move.getPosition()[0]][move.getPosition()[1]]=0;
+                board[move.getPosition()[0]][move.getPosition()[1]]=0;
                 break;
             }
         }
@@ -91,6 +91,7 @@ public class State {
                 this.board[a][h] = -1;
             }
         }
+        this.utility = 0;
         this.move = null;
         this.depth = 0;
         this.full = false;
@@ -101,7 +102,7 @@ public class State {
             available_pos[1]=a;
             this.list.add(available_pos);
         }
-        
+        this.childStates = new HashSet<State> ();
     }
     
     //copies a array board to another one
@@ -115,8 +116,6 @@ public class State {
         return newBoard;
     }
     
-    //checks if board is full
-    // sets full param to true if so
     public void setFull(){
         this.full = true;
         for(int i=0;i<6;i++){
@@ -128,13 +127,31 @@ public class State {
         }
     }
     
-    
-    public void setChildren(Set<State> children){
-        this.childStates = children;
+    public void addChild(State s){
+        this.childStates.add(s);
     }
     
-    public Set<State> getChildren(){
+//    public void setChildren(HashSet<State> children){
+//        System.out.println("SETTING "+children.size()+" children");
+//        for(State s:)
+//        this.childStates = children;
+//    }
+    
+    public HashSet<State> getChildren(){
         return this.childStates;
+    }
+    
+    public String printChildren(){
+        String r = "";
+        if(this.getChildren()!=null)
+        for(State s:this.getChildren()){
+            r+=s;
+            r+="\n";
+            r+=""+s.getUtility();
+            r+="\n";
+            System.out.println(s.getUtility());
+        }
+        return r;
     }
     
     public Set<Segment> getSegments(){
@@ -145,14 +162,15 @@ public class State {
     public void printSegmentSet(){
         if(this.segments.isEmpty())return;
         for(Segment s:this.segments){
-            System.out.println(s);
+            s.setSegMentValue();
+//            System.out.println(s);
         }
-        System.out.println("number of segments:"+this.segments.size());
+//        System.out.println("number of segments:"+this.segments.size());
     }
     
     //builds the board segments
     public Set<Segment> buildSet(){
-        HashSet<Segment> temp = new HashSet<Segment>();
+        LinkedHashSet<Segment> temp = new LinkedHashSet<Segment>();
         Segment seg = null;
         int f=0;
         //verticais
@@ -162,22 +180,26 @@ public class State {
                     int a[] = {k,l};
                     int b[] = {k+3,l};
                     seg = new Segment(a,b,this);
+                    seg.setSegMentValue();
                     temp.add(seg);
             }
         }
         for(int s=0;s<6;s++){
             for(int h=0;h<7;h++){
                 if(h+3<7){
-                    //horizontais
+                    //horizontals
                     int a[] = {s,h};
                     int b[] = {s,h+3};
                     seg = new Segment(a,b,this);
+                    seg.setSegMentValue();
                     temp.add(seg);
                 }
                 // // diagonals
                 if(s-3>=0 && h+3<7){
                     int a[] = {s,h};
-                    int b[] = {s-3,h+3};seg = new Segment(a,b,this);
+                    int b[] = {s-3,h+3};
+                    seg = new Segment(a,b,this);
+                    seg.setSegMentValue();
                     temp.add(seg);
                 // \\ diagonals
                 }
@@ -185,6 +207,7 @@ public class State {
                     int c[] = {s,h};
                     int d[] = {s+3,h+3};
                     seg = new Segment(c,d,this);
+                    seg.setSegMentValue();
                     temp.add(seg);
                 }
             }
@@ -268,7 +291,8 @@ public class State {
 
     @Override
     public String toString() {
-        return "State{" + "board=\n" + printBoard() + ", move=" + move + ", depth=" + depth + '}';
+          return printBoard();
+//        return "State{" + "board=\n" + printBoard() + ", move=" + move + ", depth=" + depth +" "+getValidPosAsString() +""+ '}';
     }
     
     
