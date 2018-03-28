@@ -128,12 +128,18 @@ public class Game {
 //        System.out.println(current);
 //        System.out.println("UTILITY: "+MinMax.UTILITY(current));
         Move move=null;
+        long endtime=-1;
+        long starttime = System.nanoTime();
         if(i==0){
             move = MinMax.MINMAX_DECISION(current);
+            endtime = System.nanoTime();
         }
         if(i==1){
             move = MinMax.ALPHA_BETA_SEARCH(current);
+            endtime = System.nanoTime();
         }
+        long total_time = endtime-starttime;
+        System.out.println("The total runtime:"+total_time);
         State newState = new State(current.getBoard(),move,current.getDepth()+1);
         setCurrentState(newState);
         setCurrentPlayer(cpu);

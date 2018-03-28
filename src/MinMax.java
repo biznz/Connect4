@@ -25,11 +25,13 @@ public class MinMax {
     private static int[] win = {1,positiveInf};
     private static int[] defeat = {-1,negativeInf};
     public static int depthLimit;
-    
+    static int expanded_nodes_count=0;
     
     
     public static Move ALPHA_BETA_SEARCH(State state){
+        expanded_nodes_count=0;
         int v = MAX_VAL(state,negativeInf,positiveInf);
+        System.out.println("Expanded nodes count: "+expanded_nodes_count);
         return getMove(v, state);
     }
     
@@ -39,6 +41,7 @@ public class MinMax {
         }
         int v = negativeInf;
         for(State s:SUCCESSOR(state)){
+            //expanded_nodes_count+=1;
             v = Math.max(v, MIN_VAL(s,alfa,beta));
             if(v>=beta){state.setUtility(v);return v;}
             alfa = Math.max(alfa, v);
@@ -53,6 +56,7 @@ public class MinMax {
         }
         int v = positiveInf;
         for(State s:SUCCESSOR(state)){
+            //expanded_nodes_count+=1;
             v = Math.min(v, MAX_VAL(s,alfa,beta));
             if(v<=alfa){return v;}
             beta = Math.min(beta, v);
@@ -63,7 +67,9 @@ public class MinMax {
     
     // min max algorithm
     public static Move MINMAX_DECISION(State state){
+        expanded_nodes_count=0;
         int v = MAX_VALUE(state);
+        System.out.println("Expanded nodes count: "+expanded_nodes_count);
         return getMove(v, state);
     }
     
@@ -128,6 +134,7 @@ public class MinMax {
             State newState = new State(state.getBoard(),move,state.getDepth()+1);
             children.add(newState);
             state.addChild(newState);
+            expanded_nodes_count+=1;
         }
         return state.getChildren();
     }
