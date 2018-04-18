@@ -99,12 +99,14 @@ public class MinMax {
     
     public static boolean TERMINAL_TEST(State state){
         if(state.isFull()){state.setUtility(UTILITY(state));return true;}
+        if(Math.abs(UTILITY(state))==512){
+            System.out.println(" GOAL REACHED");
+            System.out.println(state);
+            state.setUtility(UTILITY(state));
+            return true;}
         if(state.getDepth()!=0){
             if(state.getDepth()>=depthLimit){state.setUtility(UTILITY(state));return true;}
         }
-        if(Math.abs(UTILITY(state))==512){
-            state.setUtility(UTILITY(state));
-            return true;}
         return false;
     }
     
@@ -132,6 +134,8 @@ public class MinMax {
                 }
             }
             State newState = new State(state.getBoard(),move,state.getDepth()+1);
+//            System.out.println("state " +newState);
+//            System.out.println("utility " +UTILITY(newState));
             children.add(newState);
             state.addChild(newState);
             expanded_nodes_count+=1;
